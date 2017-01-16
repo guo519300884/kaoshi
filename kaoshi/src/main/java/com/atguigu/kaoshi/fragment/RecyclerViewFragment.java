@@ -1,17 +1,16 @@
 package com.atguigu.kaoshi.fragment;
 
-
-import android.os.Build;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.atguigu.kaoshi.R;
-import com.atguigu.kaoshi.adapter.NetAudioFragmentAdapter;
+import com.atguigu.kaoshi.adapter.RecyclerViewAdapter;
 import com.atguigu.kaoshi.base.BaseFragment;
 import com.atguigu.kaoshi.bean.NetAudioBean;
 import com.atguigu.kaoshi.utils.CacheUtils;
@@ -34,12 +33,11 @@ import butterknife.ButterKnife;
  * Created by 皇 上 on 2017/1/16.
  */
 
-public class NetAudioFragment extends BaseFragment {
-
+public class RecyclerViewFragment extends BaseFragment {
 
     private static final String TAG = NetAudioFragment.class.getSimpleName();
-    @Bind(R.id.listview)
-    ListView listview;
+    @Bind(R.id.recyclerview)
+    RecyclerView recyclerview;
 
     @Bind(R.id.progressbar)
     ProgressBar progressbar;
@@ -53,18 +51,18 @@ public class NetAudioFragment extends BaseFragment {
     private boolean isLoadMore = false;
 
     private List<NetAudioBean.ListBean> datas;
-    private NetAudioFragmentAdapter myAdapter;
+    private RecyclerViewAdapter myAdapter;
 
 
     @Override
     public View initView() {
         Log.e(TAG, "网络音频UI被初始化了");
-        View view = View.inflate(mContext, R.layout.fragment_net_audio, null);
+        View view = View.inflate(mContext, R.layout.fragment_net_joke, null);
 //        refreshLayout = (MaterialRefreshLayout) view.findViewById(R.id.refresh);
         ButterKnife.bind(this, view);
 
         //监听下拉刷新和上滑加载
-        refreshLayout.setMaterialRefreshListener(new MyMaterialRefreshListener());
+//        refreshLayout.setMaterialRefreshListener(new NetAudioFragment.MyMaterialRefreshListener());
         return view;
     }
 
@@ -151,14 +149,14 @@ public class NetAudioFragment extends BaseFragment {
                 //有视频
                 tvNomedia.setVisibility(View.GONE);
                 //设置适配器
-                myAdapter = new NetAudioFragmentAdapter(mContext, datas);
-                listview.setAdapter(myAdapter);
+                myAdapter = new RecyclerViewAdapter(mContext, datas);
+                recyclerview.setAdapter(myAdapter);
+
+                //添加布局管理器
+                recyclerview.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false));
             } else {
                 //没有视频
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-                    tvNomedia.setVisibility(View.VISIBLE);
-                }
+                tvNomedia.setVisibility(View.VISIBLE);
             }
         } else {
             NetAudioBean data = paraseJons(json);
@@ -188,6 +186,4 @@ public class NetAudioFragment extends BaseFragment {
         super.onDestroyView();
         ButterKnife.unbind(this);
     }
-
-
 }
