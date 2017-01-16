@@ -1,16 +1,19 @@
 package com.atguigu.kaoshi.fragment;
 
 
+import android.content.Intent;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.atguigu.kaoshi.R;
+import com.atguigu.kaoshi.activity.ShowImageAndGifActivity;
 import com.atguigu.kaoshi.adapter.NetAudioFragmentAdapter;
 import com.atguigu.kaoshi.base.BaseFragment;
 import com.atguigu.kaoshi.bean.NetAudioBean;
@@ -65,6 +68,32 @@ public class NetAudioFragment extends BaseFragment {
 
         //监听下拉刷新和上滑加载
         refreshLayout.setMaterialRefreshListener(new MyMaterialRefreshListener());
+
+        //设置点击事件
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
+                NetAudioBean.ListBean listEntity = datas.get(position);
+                if (listEntity != null) {
+                    //3.传递视频列表
+                    Intent intent = new Intent(mContext, ShowImageAndGifActivity.class);
+                    if (listEntity.getType().equals("gif")) {
+                        String url = listEntity.getGif().getImages().get(0);
+                        intent.putExtra("url", url);
+                        mContext.startActivity(intent);
+                    } else if (listEntity.getType().equals("image")) {
+                        String url = listEntity.getImage().getBig().get(0);
+                        intent.putExtra("url", url);
+                        mContext.startActivity(intent);
+                    }
+                }
+
+
+            }
+        });
+
         return view;
     }
 
@@ -155,7 +184,7 @@ public class NetAudioFragment extends BaseFragment {
                 listview.setAdapter(myAdapter);
             } else {
                 //没有视频
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
                     tvNomedia.setVisibility(View.VISIBLE);
                 }
@@ -182,6 +211,7 @@ public class NetAudioFragment extends BaseFragment {
         return netAudioBean;
 
     }
+
 
     @Override
     public void onDestroyView() {

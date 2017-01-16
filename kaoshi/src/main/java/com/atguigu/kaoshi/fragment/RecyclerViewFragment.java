@@ -1,15 +1,18 @@
 package com.atguigu.kaoshi.fragment;
 
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.atguigu.kaoshi.R;
+import com.atguigu.kaoshi.activity.ShowImageAndGifActivity;
 import com.atguigu.kaoshi.adapter.RecyclerViewAdapter;
 import com.atguigu.kaoshi.base.BaseFragment;
 import com.atguigu.kaoshi.bean.NetAudioBean;
@@ -28,6 +31,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+
 
 /**
  * Created by 皇 上 on 2017/1/16.
@@ -62,7 +66,10 @@ public class RecyclerViewFragment extends BaseFragment {
         ButterKnife.bind(this, view);
 
         //监听下拉刷新和上滑加载
-//        refreshLayout.setMaterialRefreshListener(new NetAudioFragment.MyMaterialRefreshListener());
+        refreshLayout.setMaterialRefreshListener(new MyMaterialRefreshListener());
+
+
+
         return view;
     }
 
